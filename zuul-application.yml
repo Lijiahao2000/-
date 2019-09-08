@@ -1,0 +1,69 @@
+server:
+  port: 10010 #服务端口
+spring:
+  profiles: dev
+  application:
+    name: zuul-service #指定服务名
+zuul:
+  prefix: /api # 添加路由前缀
+  routes:
+    user-consumer: # 这里是路由id，不能随意写
+      path: /user-consumer/** # 这里是映射路径
+    user-service: # 这里是路由id，不能随意写
+      path: /user-service/** # 这里是映射路径
+  ratelimit:
+    key-prefix: user-consumer #请求的key的前缀
+    enabled: true
+    behind-proxy: true #代理之后
+    default-policy: #针对所有的路由配置的策略
+      limit: 1000 #请求数量限制
+      quota: 1000 #请求时间限制（毫秒）
+      refresh-interval: 60 # 刷新时间窗口的时间（秒）
+      type:  #可选 限流方式
+        - user
+        - origin
+        - url
+eureka:
+  client:
+    registry-fetch-interval-seconds: 5 # 获取服务列表的周期：5s
+    service-url:
+      defaultZone: http://127.0.0.1:10086/eureka
+  instance:
+    prefer-ip-address: true
+    ip-address: 127.0.0.1
+---
+server:
+  port: 10011 #服务端口
+spring:
+  profiles: test
+  application:
+    name: zuul-service #指定服务名
+zuul:
+  prefix: /api # 添加路由前缀
+  routes:
+    user-consumer: # 这里是路由id，不能随意写
+      path: /user-consumer/** # 这里是映射路径
+    user-service: # 这里是路由id，不能随意写
+      path: /user-service/** # 这里是映射路径
+  ratelimit:
+    key-prefix: user-consumer #请求的key的前缀
+    enabled: true
+    behind-proxy: true #代理之后
+    default-policy: #针对所有的路由配置的策略
+      limit: 1000 #请求数量限制
+      quota: 1000 #请求时间限制（毫秒）
+      refresh-interval: 60 # 刷新时间窗口的时间（秒）
+      type:  #可选 限流方式
+        - user
+        - origin
+        - url
+eureka:
+  client:
+    registry-fetch-interval-seconds: 5 # 获取服务列表的周期：5s
+    service-url:
+      defaultZone: http://127.0.0.1:10087/eureka
+  instance:
+    prefer-ip-address: true
+    ip-address: 127.0.0.1
+
+
